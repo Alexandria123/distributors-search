@@ -8,7 +8,7 @@ use phpDocumentor\Reflection\File;
 
 class ArrayController extends Controller
 {
-    public array $resultArray = [];
+  /*  public array $resultArray = [];
     public array $elementsArray = [];
     public array $region = [];
     public array $allXml = [];
@@ -172,4 +172,5 @@ class ArrayController extends Controller
         }
         return $emailsCount;
     }
+  */
 }

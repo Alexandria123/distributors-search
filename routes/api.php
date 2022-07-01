@@ -1,5 +1,6 @@
 <?php
 
+use App\Distributors\allDistributers;
 use App\Http\Controllers\ArrayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get( '/products/', [ArrayController::class, 'index']);
+Route::get( '/products', function (){
+    return app(allDistributers::class)->array();
+});
 
-Route::get( '/store', [ArrayController::class, 'insertDataToDB']);
+//Route::get( '/store', [ArrayController::class, 'insertDataToDB']);
 
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
