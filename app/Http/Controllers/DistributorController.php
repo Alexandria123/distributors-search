@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Distributors\allDistributers;
+use App\Distributors\ResultArray;
 use App\Http\Requests\StoreSystemRequest;
 use Illuminate\Http\Request;
 
@@ -27,7 +28,10 @@ class DistributorController extends Controller
                 $xml[$xmlKey] = simplexml_load_string(file_get_contents(public_path('systemXml/centers_techexpert.xml')));
         }
         // $validated = $request->validate($xmlKey);
-        return app(allDistributers::class)->array($xml[$xmlKey]);
+
+        $app = app(allDistributers::class)->array($xml[$xmlKey]);
+        return $app->ind();
+
     }
 
     /**
