@@ -30,7 +30,7 @@ class DistributorController extends Controller
         // $validated = $request->validate($xmlKey);
 
         $app = app(allDistributers::class)->array($xml[$xmlKey]);
-        return $app->ind();
+        return $app->arrayWithCentersRegions();
 
     }
 

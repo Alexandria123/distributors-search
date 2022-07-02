@@ -24,7 +24,7 @@ class StoreSystemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'xmlKey' => ['required','exists:Tokens,token,executed_at,null']
+            'xmlKey' => ['required']
         ];
     }
 }
