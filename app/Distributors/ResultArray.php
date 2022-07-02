@@ -5,7 +5,6 @@ namespace App\Distributors;
 class ResultArray
 {
     public static array $result;
-    public static array $sortedArray;
 
     public function __construct($result){
         self::$result = $result;
@@ -16,11 +15,12 @@ class ResultArray
         $sorted = [];
         $sortedArray['result'] = array_map(function ($elements) use (&$sorted){
             foreach ($elements as $key=>$values){
-                if ($key == 'regname') {
-                    $sorted[$key] = $values;
-                }
-                elseif ($key == 'centers') {
-                        $sorted[$key] = $this->getJustEmails($values);
+                switch ($key) {
+                    case('regname'):
+                        $sorted[$key] = $values;
+                        break;
+                    case('centers'):
+                        $sorted[$key] = $this->getJustEmailsCity($values);
                 }
             }
             return $sorted;
@@ -29,7 +29,7 @@ class ResultArray
         return $sortedArray;
     }
 
-    private function getJustEmails($values):array
+    private function getJustEmailsCity($values):array
     {
         $resultEmails = [];
         $emails = [];
