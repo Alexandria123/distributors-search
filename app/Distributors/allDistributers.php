@@ -4,24 +4,26 @@ namespace App\Distributors;
 
 class allDistributers
 {
-    public \SimpleXMLElement $xml_Kodeks;
+   // public \SimpleXMLElement $xml_Kodeks;
     public static array $allXml;
+   public \SimpleXMLElement $xmlValue;
 
     public function __construct()
     {
-        $this->xml_Kodeks = simplexml_load_string(file_get_contents(public_path('systemXml/centers_kodeks.xml')));
+      //  $this->xml_Kodeks = simplexml_load_string(file_get_contents(public_path('systemXml/centers_kodeks.xml')));
     }
 
-    public function getAllXml(): array
+    public function getAllXml($xmlValue): array
     {
-        $xml = $this->xml_Kodeks;
-        foreach ($xml->children() as $child) { //весь список необработанных данных
+        $this->xmlValue = $xmlValue;
+
+        foreach ($xmlValue->children() as $child) { //весь список необработанных данных
             self::$allXml[] = $child;
         }
         return self::$allXml;
     }
 
-    public function array(): array
+    public function array($xmlValue): array
     {
         array_map(function ($childRegion) use (&$resultArray,&$region) {
 
@@ -33,7 +35,7 @@ class allDistributers
                 $resultArray[] = $region;
             }
             return json_encode($resultArray);
-        }, $this->getAllXml());
+        }, $this->getAllXml($xmlValue));
         return $resultArray;
     }
 
