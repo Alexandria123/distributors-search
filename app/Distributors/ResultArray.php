@@ -10,7 +10,7 @@ class ResultArray
         self::$result = $result;
     }
 
-    public function arrayWithCentersRegions(): array
+    public function arrayWithRegionsCenters(): array
     {
         $sorted = [];
         $sortedArray['result'] = array_map(function ($elements) use (&$sorted){
@@ -20,7 +20,7 @@ class ResultArray
                         $sorted[$key] = $values;
                         break;
                     case('centers'):
-                        $sorted[$key] = $this->getJustEmailsCity($values);
+                        $sorted[$key] = $this->getJustEmailsCity($values); //1
                 }
             }
             return $sorted;
@@ -35,16 +35,36 @@ class ResultArray
         $emails = [];
         foreach ($values as $centers) {
             foreach ($centers as $keyEmail => $email) {
-                switch ($keyEmail) {
-                    case('email'):
-                        $emails[$keyEmail] = $email;
-                        break;
-                    case ('city'):
-                        $emails[$keyEmail] = $email;
+
+                if ($keyEmail=='city'){
+                    $emails[$keyEmail] = $email;
+                }
+                elseif($keyEmail=='email') {
+                    $domains = [];
+                    $els = [];
+                    $arrayOfEmailsDomains = explode(", ", $email);
+                    foreach ($arrayOfEmailsDomains as $element) {
+                            $emails= $this->getEmails($element, $emails);
+                    }
                 }
             }
-            $resultEmails[] = $emails;
+            $resultEmails[]=$emails;
+            $emails = null;
         }
+
         return $resultEmails;
+    }
+
+    private function getEmails($element, $emails):array
+    {
+        $isEmail = preg_match("/^[^@]*@[^@]*\.[^@]*$/", $element);
+        $isDomain = preg_match('%^((https?://)|(www\.))([a-z0-9-].?)|([а-я0-9-].?)+(:[0-9]+)?(/.*)?$%i', $element);
+        if ($isEmail) {
+            $emails['emails'][] = $element;
+        }
+        elseif ($isDomain) {
+            $emails['domains'][] = $element;
+        }
+        return $emails;
     }
 }

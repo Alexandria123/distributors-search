@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Distributors\allDistributers;
+use App\Distributors\allDistributors;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,8 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(allDistributers::class, function() {
-            return new allDistributers();
+        $this->app->bind(allDistributors::class, function() {
+            return new allDistributors();
         });
     }
 

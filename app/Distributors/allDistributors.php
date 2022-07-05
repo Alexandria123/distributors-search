@@ -2,16 +2,14 @@
 
 namespace App\Distributors;
 
-class allDistributers
+class allDistributors
 {
     public static array $allXml;
-   public \SimpleXMLElement $xmlValue;
-
+    public \SimpleXMLElement $xmlValue;
 
     public function getAllXml($xmlValue): array
     {
         $this->xmlValue = $xmlValue;
-
         foreach ($xmlValue->children() as $child) { //весь список необработанных данных
             self::$allXml[] = $child;
         }
@@ -21,7 +19,6 @@ class allDistributers
     public function array($xmlValue): ResultArray
     {
         array_map(function ($childRegion) use (&$resultArray,&$region) {
-
             $attrValue = $childRegion->attributes();//аттрибуты региона
             if ($childRegion->attributes()->centers!=0) {
                 foreach ($attrValue as $key=>$attrRegion) {

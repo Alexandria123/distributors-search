@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Distributors\allDistributers;
+use App\Distributors\allDistributors;
 use App\Distributors\ResultArray;
 use App\Http\Requests\StoreSystemRequest;
 use Illuminate\Http\Request;
@@ -29,9 +29,8 @@ class DistributorController extends Controller
         }
         // $validated = $request->validate($xmlKey);
 
-        $app = app(allDistributers::class)->array($xml[$xmlKey]);
-        return $app->arrayWithCentersRegions();
-
+        $app = app(allDistributors::class)->array($xml[$xmlKey]);
+        return $app->arrayWithRegionsCenters();
     }
 
     /**

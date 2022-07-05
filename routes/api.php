@@ -1,6 +1,6 @@
 <?php
 
-use App\Distributors\allDistributers;
+use App\Distributors\allDistributors;
 use App\Http\Controllers\ArrayController;
 use App\Http\Controllers\DistributorController;
 use Illuminate\Http\Request;
