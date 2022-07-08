@@ -4,69 +4,43 @@ namespace App\Distributors;
 
 class AllDistributors
 {
-     private const CONTACT_PATTERNS = [
-         'email' =>'/^[^@]*@[^@]*\.[^@]*$/',
-         'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
-     ];
+    public static array $allXml;
+    public \SimpleXMLElement $xmlValue;
 
-    public function getAllDistributorsPrepared($xml): array
+    public function getAllXml($xmlValue): array
     {
-        $preparedCenters = [];
-        $regname = [];
-        foreach ($xml->region as $region) {
-            if ((int)$region['centers'] === 0) {
-                continue;//пропускаем, переходим к следующему региону
-            }
-            //получаем названия региона из аттрибутов региона
-            $regname['regname'] = (string)$region->attributes()['regname'];
-            //обходим все центры региона
-            foreach ($region->center as $center) {
-                //тут подготавливаем данные каждого центра, извлекаем emails, domains и т.д. в отдельном методе
-                $preparedCenters[] = $this->getJustEmailsCity($center, $regname);
-            }
+        $this->xmlValue = $xmlValue;
+        foreach ($xmlValue->children() as $child) { //весь список необработанных данных
+            self::$allXml[] = $child;
         }
-        return $preparedCenters;
+        return self::$allXml;
     }
 
-//    private function getCentersAttributesArray($center, $regname):array
-//    {
-//        $centers = [];
-//        //обходим аттрибуты цетнра, добавляем в массив и объединяем с регионами
-//        foreach ($center->attributes() as $keyC => $center) {
-//            $centers[$keyC] = (string)$center;
-//        }
-//        return array_merge($centers, $regname);
-//    }
-//
-
-    private function getJustEmailsCity($center, $regname):array
+    public function array($xmlValue): ResultArray
     {
-        //добавляем только нужные аттрибуты 'city', 'regname', 'domain', 'email'
-            return [
-                'city'=>(string)$center->attributes()['city'] ?? '',
-                'regname' => $regname['regname'] ?? '',
-                'domain' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'domain') : [],
-                'email' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'email') : []
-            ];
-    }
-
-    private function getDomainsEmails($contact, $contactType): array
-    {
-        $contacts = [];
-        $arrayOfEmailsDomains = explode(", ", $contact);
-        //обходим полученный массив из имейла и домена
-        foreach ($arrayOfEmailsDomains as $element) {
-            //проверяем является ли элемент мейлом или сайтом, тогда добавляем в соответствующий массив
-            if($this->isEmailDomain($element, $contactType)){
-                $contacts[] = $element;
+        array_map(function ($childRegion) use (&$resultArray,&$region) {
+            $attrValue = $childRegion->attributes();//аттрибуты региона
+            if ($childRegion->attributes()->centers!=0) {
+                foreach ($attrValue as $key=>$attrRegion) {
+                        $key=='centers' ? $region[$key]= $this->getCentersAttributesArray($childRegion): $region[$key] = (string)$attrRegion;
+                }
+                $resultArray[] = $region;
             }
-        }
-        return $contacts ?? [];
+            return json_encode($resultArray);
+        }, $this->getAllXml($xmlValue));
+        return new ResultArray($resultArray); //Получаем обработанные данные со всеми аттрибутами и всем
     }
 
-    private function isEmailDomain($element,$contactType): bool
+    private function getCentersAttributesArray($childRegion):array
     {
-        return preg_match(self::CONTACT_PATTERNS[$contactType], $element);
+        $centers = [];
+        $centersAll = [];
+        foreach ($childRegion->children() as $children) {
+            foreach ($children->attributes() as $keyC => $center) {
+                $centers[$keyC] = (string)$center;
+            }
+            $centersAll[] = $centers;
+        }
+        return $centersAll;
     }
-
 }

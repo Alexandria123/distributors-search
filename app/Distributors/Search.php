@@ -4,32 +4,26 @@ namespace App\Distributors;
 
 class Search
 {
-    private array $array;
-
-    public function __construct($array){
-        $this->array = $array;
-    }
-
-    public function getBestMatchingCity($searchValue): array
+    public function getEmailsbyCity($req, $array, $i = 0)
     {
-        $bestMatchCity = [];
-        foreach ($this->array as $elements) {
-            //Убираем пробелы,  меняем город, г.,ё у клиентской строки
-            $searchValue = $this->valueReplace($searchValue);
-            //Получаем расстояние
-            $lev = levenshtein($searchValue, $this->valueReplace($elements['city']));
-            // если расстояние лев. меньше допустимого, добавляем значение
-            if ($lev <= 4) {
-                    $bestMatchCity[] = $elements;
+        $res = [];
+        foreach ($array as $result=>$values){
+            foreach ($values as $index=>$val){
+
+                foreach ($val as $regnamecenters=>$elements){
+                    if ($regnamecenters == 'centers'){
+                        foreach ($elements as $indx=>$els){
+
+                            if($array['result'][$index]['centers'][$indx]['city'] == $req) {
+                                //echo $index . PHP_EOL;
+                                $res[] =  $array['result'][$index]['centers'][$indx];
+                            }
+                        }
+                    }
+                }
             }
         }
-        return $bestMatchCity;
+        return $res;
     }
 
-    private function valueReplace($value): array|string|null
-    {
-        $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
-        $replacement = ['', '', '','/е/'];
-        return mb_strtolower(preg_replace($pattern, $replacement, $value));
-    }
 }
