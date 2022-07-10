@@ -20,7 +20,7 @@ class ResultArray
                         $sorted[$key] = $values;
                         break;
                     case('centers'):
-                        $sorted[$key] = $this->getJustEmailsCity($values); //1
+                        $sorted[$key] = $this->getJustEmailsCity($values);
                 }
             }
             return $sorted;
@@ -40,8 +40,6 @@ class ResultArray
                     $emails[$keyEmail] = $email;
                 }
                 elseif($keyEmail=='email') {
-                    $domains = [];
-                    $els = [];
                     $arrayOfEmailsDomains = explode(", ", $email);
                     foreach ($arrayOfEmailsDomains as $element) {
                             $emails= $this->getEmails($element, $emails);
