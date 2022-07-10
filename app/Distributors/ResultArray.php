@@ -49,7 +49,6 @@ class ResultArray
             $resultEmails[]=$emails;
             $emails = null;
         }
-
         return $resultEmails;
     }
 
