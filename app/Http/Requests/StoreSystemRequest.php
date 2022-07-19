@@ -24,7 +24,8 @@ class StoreSystemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'xmlKey' => ['required']
+            'systemType' => ['required'],
+            'query' => ['required', 'string']
         ];
     }
 }

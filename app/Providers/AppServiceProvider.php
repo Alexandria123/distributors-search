@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Distributors\allDistributors;
 use App\Distributors\Search;
+use App\Repository\XmlFileRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(XmlFileRepository::class, function(){
+            return new XmlFileRepository();
+        });
         $this->app->bind(AllDistributors::class, function() {
             return new AllDistributors();
         });

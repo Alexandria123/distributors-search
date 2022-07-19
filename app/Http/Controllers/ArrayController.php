@@ -4,36 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Distributors\AllDistributors;
 use App\Distributors\Search;
+use App\Repository\XmlFileRepository;
 use Illuminate\Http\Request;
 
 class ArrayController extends Controller
 {
 
-    public function index($xmlKey)
+    public function allDistributorsSortedArray($systemType)
     {
-        $xml = [];
-        if(!in_array($xmlKey, ['kodeks','techexpert'])){
+        if(!in_array($systemType, ['kodeks','techexpert'])){
             abort(404);
         }
-        switch ($xmlKey) {
-            case('kodeks'):
-                $xml[$xmlKey] = simplexml_load_string(file_get_contents(public_path('systemXml/centers_kodeks.xml')));
-                break;
-            case('techexpert'):
-                $xml[$xmlKey] = simplexml_load_string(file_get_contents(public_path('systemXml/centers_techexpert.xml')));
-        }
-        // $validated = $request->validate($xmlKey);
+        $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
+        // $validated = $request->validate($systemType);
 
-        $app = app(AllDistributors::class)->array($xml[$xmlKey]);
+        $app = app(AllDistributors::class)->array($xml);
         return $app->arrayWithRegionsCenters();
     }
 
-    public function store(Request $request, $xmlKey)
+    public function store(Request $request, $systemType)
     {
         $searchValue= $request->query('search');
-        $array = $this->index($xmlKey);
+        $array = $this->allDistributorsSortedArray($systemType);
         return app(Search::class)->getEmailsbyCity($searchValue, $array);
-
-
     }
 }

@@ -8,11 +8,10 @@ class XmlFileRepository
 {
     public function getXmlFileBySystemType($systemType): \SimpleXMLElement
     {
-        return simplexml_load_string(Storage::disk('local')->get($this->xmlFile($systemType)));
-    }
-
-    private function xmlFile($systemType)
-    {
-        return config('systemType.'.$systemType);
+        $xml[$systemType] = match($systemType) {
+            'kodeks' => simplexml_load_string(Storage::disk('local')->get('systemXml/centers_kodeks.xml')),
+            'techexpert' => simplexml_load_string(Storage::disk('local')->get('systemXml/centers_techexpert.xml')),
+        };
+        return $xml[$systemType];
     }
 }
