@@ -13,7 +13,7 @@ class ResultArray
     public function arrayWithRegionsCenters(): array
     {
         $sorted = [];
-        $sortedArray['result'] = array_map(function ($elements) use (&$sorted){
+        return array_map(function ($elements) use (&$sorted){
             foreach ($elements as $key=>$values){
                 switch ($key) {
                     case('regname'):
@@ -25,41 +25,60 @@ class ResultArray
             }
             return $sorted;
         },self::$result);
-
-        return $sortedArray;
     }
 
     private function getJustEmailsCity($values):array
     {
         $resultEmails = [];
-        $emails = [];
+        $cities = [];
+        $emailsDomains = [];
         foreach ($values as $centers) {
             foreach ($centers as $keyEmail => $email) {
+                switch ($keyEmail) {
+                    case ('city'):
+                        $cities[$keyEmail] = $this->getCities($email);
+                        break;
+                    case ('email'):
+                        $emailsDomains = $this->getDomainsEmails($keyEmail, $email);
 
-                if ($keyEmail=='city'){
-                    $emails[$keyEmail] = $email;
-                }
-                elseif($keyEmail=='email') {
-                    $arrayOfEmailsDomains = explode(", ", $email);
-                    foreach ($arrayOfEmailsDomains as $element) {
-                            $emails= $this->getEmails($element, $emails);
-                    }
                 }
             }
-            $resultEmails[]=$emails;
-            $emails = null;
+            $citiesEmailsDomains = array_merge($cities, $emailsDomains);
+            $resultEmails[]=$citiesEmailsDomains;
+            $cities = null;
         }
         return $resultEmails;
+    }
+
+    private function getCities($email)
+    {
+            return $email;
+    }
+
+    private function getDomainsEmails($keyEmail, $email)
+    {
+        $emails = [];
+
+            $arrayOfEmailsDomains = explode(", ", $email);
+            foreach ($arrayOfEmailsDomains as $element) {
+                $emails = $this->getEmails($element, $emails);
+                $emails = $this->getDomains($element, $emails);
+            }
+            return $emails;
     }
 
     private function getEmails($element, $emails):array
     {
         $isEmail = preg_match("/^[^@]*@[^@]*\.[^@]*$/", $element);
-        $isDomain = preg_match('%^((https?://)|(www\.))([a-z0-9-].?)|([а-я0-9-].?)+(:[0-9]+)?(/.*)?$%i', $element);
         if ($isEmail) {
             $emails['emails'][] = $element;
         }
-        elseif ($isDomain) {
+        return $emails;
+    }
+    private function getDomains($element, $emails):array
+    {
+        $isDomain = preg_match('%^((https?://)|(www\.))([a-z0-9-].?)|([а-я0-9-].?)+(:[0-9]+)?(/.*)?$%i', $element);
+        if ($isDomain) {
             $emails['domains'][] = $element;
         }
         return $emails;

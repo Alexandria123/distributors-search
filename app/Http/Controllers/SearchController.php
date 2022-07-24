@@ -6,31 +6,28 @@ use App\Distributors\AllDistributors;
 use App\Distributors\Search;
 use App\Http\Requests\SearchRequest;
 use App\Repository\XmlFileRepository;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 class SearchController extends Controller
 {
-    private XmlFileRepository $xmlFileRepository;
-    private AllDistributors $allDistributors;
 
-    public function __construct()
+    public function allDistributorsSortedArray($systemType)
     {
-        $this->xmlFileRepository = new XmlFileRepository();
-        $this->allDistributors = new AllDistributors();
+        if(!in_array($systemType, ['kodeks','techexpert'])){
+            abort(404);
+        }
+        $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
+        // $validated = $request->validate($systemType);
+
+        $app = app(AllDistributors::class)->array($xml);
+        return $app->arrayWithRegionsCenters();
     }
 
-    public function searchByCity(SearchRequest $request): array
+    public function searchByCity(SearchRequest $request, $systemType)
     {
         $searchValue= $request->query('search');
-        $search = new Search($this->getAllDistributors($request));
-        return $search->getBestMatchingCity($searchValue);
-    }
-
-    public function getAllDistributors(SearchRequest $request): array
-    {
-        $systemType = $request->route('systemType');
-        //получаем xml файл, передаем в метод
-        $xml =  $this->xmlFileRepository->getXmlFileBySystemType($systemType);
-        //возвращаем массив с подготовленными центрами и регионами
-        return $this->allDistributors->getAllDistributorsPrepared($xml);
+        $array = $this->allDistributorsSortedArray($systemType);
+        return app(Search::class)->getEmailsbyCity($searchValue, $array);
     }
 }

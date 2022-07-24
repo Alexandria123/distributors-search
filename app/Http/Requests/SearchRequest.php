@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class SearchRequest extends FormRequest
 {
@@ -12,16 +11,11 @@ class SearchRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    /*public function authorize()
     {
-        return true;
+        return false;
     }
-
-    protected function prepareForValidation()
-    {
-      //  $this->mergeIfMissing(['searchValue' => $this->query('search')]);
-    }
-
+*/
     /**
      * Get the validation rules that apply to the request.
      *
@@ -30,7 +24,8 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-          //  'searchValue' => ['required', 'string', 'min:3', 'max:30']
+            'systemType' => ['required'],
+            'query' => ['required', 'string']
         ];
     }
 }
