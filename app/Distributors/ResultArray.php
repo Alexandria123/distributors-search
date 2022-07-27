@@ -13,58 +13,54 @@ class ResultArray
     public function arrayWithRegionsCenters(): array
     {
         $sorted = [];
-        return array_map(function ($elements) use (&$sorted){
+        $regions = [];
+        $nestedArrayDistributors = array_map(function ($elements) use (&$sorted, &$regions){
             foreach ($elements as $key=>$values){
                 switch ($key) {
                     case('regname'):
-                        $sorted[$key] = $values;
+                        $regions[$key] = $values;
                         break;
                     case('centers'):
-                        $sorted[$key] = $this->getJustEmailsCity($values);
+                        $sorted = $this->getJustEmailsCity($values, $regions);
                 }
             }
             return $sorted;
         },self::$result);
+
+        return $this->getFlattenedDistributors($nestedArrayDistributors);
     }
 
-    private function getJustEmailsCity($values):array
+    private function getJustEmailsCity($values, $regions):array
     {
-        $resultEmails = [];
+        $regionsCitiesEmailsDomains = [];
         $cities = [];
         $emailsDomains = [];
-        foreach ($values as $centers) {
-            foreach ($centers as $keyEmail => $email) {
-                switch ($keyEmail) {
-                    case ('city'):
-                        $cities[$keyEmail] = $this->getCities($email);
-                        break;
-                    case ('email'):
-                        $emailsDomains = $this->getDomainsEmails($keyEmail, $email);
 
+            foreach ($values as $centers) {
+                foreach ($centers as $keyEmail => $email) {
+                    switch ($keyEmail) {
+                        case ('city'):
+                            $cities[$keyEmail] = $email;
+                            break;
+                        case ('email'):
+                            $emailsDomains = $this->getDomainsEmails($email);
+                    }
                 }
+                $regionsCitiesEmailsDomains[] = array_merge($regions, $cities, $emailsDomains);
+                $cities = null;
             }
-            $citiesEmailsDomains = array_merge($cities, $emailsDomains);
-            $resultEmails[]=$citiesEmailsDomains;
-            $cities = null;
-        }
-        return $resultEmails;
+        return $regionsCitiesEmailsDomains;
     }
 
-    private function getCities($email)
-    {
-            return $email;
-    }
-
-    private function getDomainsEmails($keyEmail, $email)
+    private function getDomainsEmails($email)
     {
         $emails = [];
-
-            $arrayOfEmailsDomains = explode(", ", $email);
-            foreach ($arrayOfEmailsDomains as $element) {
-                $emails = $this->getEmails($element, $emails);
-                $emails = $this->getDomains($element, $emails);
-            }
-            return $emails;
+        $arrayOfEmailsDomains = explode(", ", $email);
+        foreach ($arrayOfEmailsDomains as $element) {
+            $emails = $this->getEmails($element, $emails);
+            $emails = $this->getDomains($element, $emails);
+        }
+        return $emails;
     }
 
     private function getEmails($element, $emails):array
@@ -75,6 +71,7 @@ class ResultArray
         }
         return $emails;
     }
+
     private function getDomains($element, $emails):array
     {
         $isDomain = preg_match('%^((https?://)|(www\.))([a-z0-9-].?)|([а-я0-9-].?)+(:[0-9]+)?(/.*)?$%i', $element);
@@ -82,5 +79,16 @@ class ResultArray
             $emails['domains'][] = $element;
         }
         return $emails;
+    }
+
+    private function getFlattenedDistributors(array $nestedArrayDistributors): array
+    {
+        $distributors = [];
+        foreach ($nestedArrayDistributors as $elementsByRegions){
+            foreach ($elementsByRegions as $elements){
+                $distributors[] = $elements;
+            }
+        }
+        return $distributors;
     }
 }

@@ -4,26 +4,16 @@ namespace App\Distributors;
 
 class Search
 {
-    public function getEmailsbyCity($searchValue, $array)
+    public function getEmailsbyCity($searchValue, $array): array
     {
-        $result = [];
-        foreach ($array as $values){
-            foreach ($values as $index=>$val){
-
-                foreach ($val as $regnamecenters=>$elements){
-                    if ($regnamecenters == 'centers'){
-                        foreach ($elements as $indx=>$els){
-
-                            if($array['result'][$index]['centers'][$indx]['city'] == $searchValue) {
-                                //echo $index . PHP_EOL;
-                                $result[] =  $array['result'][$index]['centers'][$indx];
-                            }
-                        }
-                    }
+        $resultSearch = [];
+        foreach ($array as $elements){ //index
+            foreach ($elements as $values) {
+                if ($values == $searchValue) {
+                    $resultSearch[] = $elements;
                 }
             }
         }
-        return $result;
+        return $resultSearch;
     }
-
 }
