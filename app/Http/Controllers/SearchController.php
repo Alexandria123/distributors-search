@@ -14,9 +14,6 @@ class SearchController extends Controller
 
     public function allDistributorsSortedArray($systemType)
     {
-        if(!in_array($systemType, ['kodeks','techexpert'])){
-            abort(404);
-        }
         $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
         // $validated = $request->validate($systemType);
 
