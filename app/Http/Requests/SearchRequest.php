@@ -11,11 +11,11 @@ class SearchRequest extends FormRequest
      *
      * @return bool
      */
-    /*public function authorize()
+    public function authorize()
     {
-        return false;
+        return true;
     }
-*/
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +24,7 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'systemType' => ['required'],
+            '$systemType' => ['required'],
             'query' => ['required', 'string']
         ];
     }
