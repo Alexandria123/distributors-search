@@ -6,8 +6,6 @@ use App\Distributors\AllDistributors;
 use App\Distributors\Search;
 use App\Http\Requests\SearchRequest;
 use App\Repository\XmlFileRepository;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 
 class SearchController extends Controller
 {
