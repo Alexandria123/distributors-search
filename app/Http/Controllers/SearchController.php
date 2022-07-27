@@ -13,8 +13,6 @@ class SearchController extends Controller
     public function allDistributorsSortedArray($systemType)
     {
         $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
-        // $validated = $request->validate($systemType);
-
         $app = app(AllDistributors::class)->array($xml);
         return $app->arrayWithRegionsCenters();
     }
