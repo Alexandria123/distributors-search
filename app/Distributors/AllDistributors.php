@@ -10,7 +10,7 @@ class AllDistributors
     public function getAllXml($xmlValue): array
     {
         $this->xmlValue = $xmlValue;
-        foreach ($xmlValue->children() as $child) { //весь список необработанных данных
+        foreach ($xmlValue->children() as $child) { //Весь список необработанных данных
             self::$allXml[] = $child;
         }
         return self::$allXml;
@@ -19,7 +19,7 @@ class AllDistributors
     public function array($xmlValue): ResultArray
     {
         array_map(function ($childRegion) use (&$resultArray,&$region) {
-            $attrValue = $childRegion->attributes();//аттрибуты региона
+            $attrValue = $childRegion->attributes();//Аттрибуты региона
             if ($childRegion->attributes()->centers!=0) {
                 foreach ($attrValue as $key=>$attrRegion) {
                         $key=='centers' ? $region[$key]= $this->getCentersAttributesArray($childRegion): $region[$key] = (string)$attrRegion;

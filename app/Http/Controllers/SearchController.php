@@ -20,7 +20,9 @@ class SearchController extends Controller
     public function searchByCity(SearchRequest $request, $systemType)
     {
         $searchValue= $request->query('search');
-        $array = $this->allDistributorsSortedArray($systemType);
+        $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
+        $app = app(AllDistributors::class)->array($xml);
+        $array = $app->arrayWithRegionsCenters();
         return app(Search::class)->getEmailsbyCity($searchValue, $array);
     }
 }
