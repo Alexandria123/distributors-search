@@ -9,7 +9,6 @@ use App\Repository\XmlFileRepository;
 
 class SearchController extends Controller
 {
-
     public function allDistributorsSortedArray($systemType)
     {
         $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
