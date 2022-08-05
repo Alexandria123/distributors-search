@@ -4,91 +4,61 @@ namespace App\Distributors;
 
 class ResultArray
 {
-    public static array $result;
-
-    public function __construct($result){
-        self::$result = $result;
+    public function __construct(private array $preparedCenters){
+       // self::$preparedCenters = $preparedCenters;
     }
 
-    public function arrayWithRegionsCenters(): array
+    public function getJustEmailsCity(): array
     {
-        $sorted = [];
-        $regions = [];
-        $nestedArrayDistributors = array_map(function ($elements) use (&$sorted, &$regions){
-            foreach ($elements as $key=>$values){
-                switch ($key) {
-                    case('regname'):
-                        $regions[$key] = $values;
-                        break;
-                    case('centers'):
-                        $sorted = $this->getJustEmailsCity($values, $regions);
-                }
-            }
-            return $sorted;
-        },self::$result);
-
-        return $this->getFlattenedDistributors($nestedArrayDistributors);
-    }
-
-    private function getJustEmailsCity($values, $regions):array
-    {
+        $preparedCenters = $this->preparedCenters;
         $regionsCitiesEmailsDomains = [];
         $cities = [];
         $emailsDomains = [];
-
-            foreach ($values as $centers) {
-                foreach ($centers as $keyEmail => $email) {
-                    switch ($keyEmail) {
-                        case ('city'):
-                            $cities[$keyEmail] = $email;
-                            break;
-                        case ('email'):
-                            $emailsDomains = $this->getDomainsEmails($email);
-                    }
+        //обохдим и добавляем только нужные аттрибуты 'city', 'regname', 'email'
+        foreach ($preparedCenters as $value) {
+            foreach ($value as $keyEmail => $email) {
+                switch ($keyEmail) {
+                    case ('city'):
+                    case ('regname'):
+                        $cities[$keyEmail] = $email;
+                        break;
+                    case('email'):
+                        $emailsDomains = $this->getDomainsEmails($email);
                 }
-                $regionsCitiesEmailsDomains[] = array_merge($regions, $cities, $emailsDomains);
-                $cities = null;
             }
+            $regionsCitiesEmailsDomains[] = array_merge($cities, $emailsDomains);
+        }
         return $regionsCitiesEmailsDomains;
     }
 
-    private function getDomainsEmails($email)
+    private function getDomainsEmails($email): array
     {
         $emails = [];
         $arrayOfEmailsDomains = explode(", ", $email);
+        //обходим полученный массив из имейла и домена
         foreach ($arrayOfEmailsDomains as $element) {
-            $emails = $this->getEmails($element, $emails);
-            $emails = $this->getDomains($element, $emails);
+            //проверяем является ли элемент мейлом или сайтом, тогда добавляем в соответствующий массив
+            if($this->isEmail($element)) $emails['email'][]= $element;
+            if($this->isDomain($element)) $emails['domain'][]= $element;
         }
         return $emails;
     }
 
-    private function getEmails($element, $emails):array
+    private function isEmail($element): bool
     {
         $isEmail = preg_match("/^[^@]*@[^@]*\.[^@]*$/", $element);
         if ($isEmail) {
-            $emails['emails'][] = $element;
+            return true;
         }
-        return $emails;
+        else return false;
     }
 
-    private function getDomains($element, $emails):array
+    private function isDomain($element): bool
     {
-        $isDomain = preg_match('%^((https?://)|(www\.))([a-z0-9-].?)|([а-я0-9-].?)+(:[0-9]+)?(/.*)?$%i', $element);
+        $isDomain = preg_match('%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i', $element);
         if ($isDomain) {
-            $emails['domains'][] = $element;
+            return true;
         }
-        return $emails;
-    }
-
-    private function getFlattenedDistributors(array $nestedArrayDistributors): array
-    {
-        $distributors = [];
-        foreach ($nestedArrayDistributors as $elementsByRegions){
-            foreach ($elementsByRegions as $elements){
-                $distributors[] = $elements;
-            }
-        }
-        return $distributors;
+        else return false;
     }
 }

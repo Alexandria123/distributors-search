@@ -4,43 +4,32 @@ namespace App\Distributors;
 
 class AllDistributors
 {
-    public static array $allXml;
-    public \SimpleXMLElement $xmlValue;
-
-    public function getAllXml($xmlValue): array
+    public function getAllDistributorsPrepared($xml): ResultArray
     {
-        $this->xmlValue = $xmlValue;
-        foreach ($xmlValue->children() as $child) { //Весь список необработанных данных
-            self::$allXml[] = $child;
-        }
-        return self::$allXml;
-    }
-
-    public function array($xmlValue): ResultArray
-    {
-        array_map(function ($childRegion) use (&$resultArray,&$region) {
-            $attrValue = $childRegion->attributes();//Аттрибуты региона
-            if ($childRegion->attributes()->centers!=0) {
-                foreach ($attrValue as $key=>$attrRegion) {
-                        $key=='centers' ? $region[$key]= $this->getCentersAttributesArray($childRegion): $region[$key] = (string)$attrRegion;
-                }
-                $resultArray[] = $region;
+        $preparedCenters = [];
+        $regname = [];
+        foreach ($xml->region as $region) {
+            if ((int)$region['centers'] === 0) {
+                continue;//пропускаем, переходим к следующему региону
             }
-            return json_encode($resultArray);
-        }, $this->getAllXml($xmlValue));
-        return new ResultArray($resultArray); //Получаем обработанные данные со всеми аттрибутами и всем
+            //получаем названия региона из аттрибутов региона
+            $regname['regname'] = (string)$region->attributes()['regname'];
+            //обходим все центры региона
+            foreach ($region->center as $center) {
+                //тут подготавливаем данные каждого центра, извлекаем emails, domains и т.д. в отдельном методе
+                $preparedCenters[] = $this->getCentersAttributesArray($center, $regname);
+            }
+        }
+        return new ResultArray($preparedCenters);
     }
 
-    private function getCentersAttributesArray($childRegion):array
+    private function getCentersAttributesArray($center, $regname):array
     {
         $centers = [];
-        $centersAll = [];
-        foreach ($childRegion->children() as $children) {
-            foreach ($children->attributes() as $keyC => $center) {
-                $centers[$keyC] = (string)$center;
-            }
-            $centersAll[] = $centers;
+        //обходим аттрибуты цетнра, добавляем в массив и объединяем с регионами
+        foreach ($center->attributes() as $keyC => $center) {
+            $centers[$keyC] = (string)$center;
         }
-        return $centersAll;
+        return array_merge($centers, $regname);
     }
 }

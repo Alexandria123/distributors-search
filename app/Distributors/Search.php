@@ -4,16 +4,27 @@ namespace App\Distributors;
 
 class Search
 {
-    public function getEmailsbyCity($searchValue, $array): array
+    private array $array;
+
+    public function __construct($array){
+        $this->array = $array;
+    }
+
+    public function getBestMatchingCity($searchValue): array
     {
-        $resultSearch = [];
-        foreach ($array as $elements){ //index
-            foreach ($elements as $values) {
-                if ($values == $searchValue) {
-                    $resultSearch[] = $elements;
-                }
+        $array = $this->array;
+        $bestMatchCity = [];
+        foreach ($array as $elements){
+            $pattern = ['/\s+/', '/город/', '/Город/'];
+            $replacement = ['', 'г. ', 'г. '];
+            //Убираем пробелы, город меняем на г.
+            $searchValue = mb_strtolower(preg_replace($pattern, $replacement, $searchValue));
+            $lev = levenshtein($searchValue, $elements['city']);
+            // если расстояние лев. меньше допустимого, добавляем значение
+            if ($lev <= 7) {
+                $bestMatchCity[] = $elements;
             }
         }
-        return $resultSearch;
+        return $bestMatchCity;
     }
 }

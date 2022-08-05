@@ -9,19 +9,28 @@ use App\Repository\XmlFileRepository;
 
 class SearchController extends Controller
 {
-    public function allDistributorsSortedArray($systemType)
+    private XmlFileRepository $xmlFileRepository;
+    private AllDistributors $allDistributors;
+
+    public function __construct()
     {
-        $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
-        $app = app(AllDistributors::class)->array($xml);
-        return $app->arrayWithRegionsCenters();
+        $this->xmlFileRepository = new XmlFileRepository();
+        $this->allDistributors = new AllDistributors();
     }
 
-    public function searchByCity(SearchRequest $request, $systemType)
+    public function searchByCity(SearchRequest $request): array
     {
         $searchValue= $request->query('search');
-        $xml = app(XmlFileRepository::class)->getXmlFileBySystemType($systemType);
-        $app = app(AllDistributors::class)->array($xml);
-        $array = $app->arrayWithRegionsCenters();
-        return app(Search::class)->getEmailsbyCity($searchValue, $array);
+        $search = new Search($this->getAllDistributors($request));
+        return $search->getBestMatchingCity($searchValue);
+    }
+
+    private function getAllDistributors(SearchRequest $request): array
+    {
+        $systemType = $request->route('systemType');
+        //получаем xml файл, передаем в метод
+        $xml =  $this->xmlFileRepository->getXmlFileBySystemType($systemType);
+        //возвращаем массив с подготовленными центрами и регионами
+        return $this->allDistributors->getAllDistributorsPrepared($xml)->getJustEmailsCity();
     }
 }

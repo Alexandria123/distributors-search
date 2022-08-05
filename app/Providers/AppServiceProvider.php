@@ -16,15 +16,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(XmlFileRepository::class, function(){
-            return new XmlFileRepository();
-        });
-        $this->app->bind(AllDistributors::class, function() {
-            return new AllDistributors();
-        });
-        $this->app->bind(Search::class, function() {
-            return new Search();
-        });
     }
 
     /**

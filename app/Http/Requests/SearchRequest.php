@@ -17,12 +17,6 @@ class SearchRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
-    {
-        $this->mergeIfMissing(['systemType' => $this->route('systemType')]);
-        $this->mergeIfMissing(['searchValue' => $this->query('search')]);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,8 +25,7 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'systemType' => ['required', Rule::in(['kodeks','techexpert'])],
-            'searchValue' => ['required', 'string', 'max:19']
+            'searchValue' => ['required', 'string', 'min:3', 'max:30']
         ];
     }
 }
