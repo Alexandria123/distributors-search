@@ -18,7 +18,7 @@ class SearchController extends Controller
         $this->allDistributors = new AllDistributors();
     }
 
-    public function searchByCity(SearchRequest $request): array
+    public function searchByCity(SearchRequest $request)
     {
         $searchValue= $request->query('search');
         $search = new Search($this->getAllDistributors($request));

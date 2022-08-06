@@ -18,8 +18,8 @@ class ResultArray
         //обохдим и добавляем только нужные аттрибуты 'city', 'regname', 'email'
         foreach ($preparedCenters as $key=>$value) {
             $regionsCitiesEmailsDomains[] = [
-                'city'=>$value['city'] ?? [],
-                'regname' => $value['regname'] ?? [],
+                'city'=>$value['city'] ?? '',
+                'regname' => $value['regname'] ?? '',
                 'domain' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'domain') : [],
                 'email' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'email') : []
             ];
