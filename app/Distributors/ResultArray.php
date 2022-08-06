@@ -8,7 +8,6 @@ class ResultArray
                                             'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
                                             ];
     public function __construct(private array $preparedCenters){
-       // self::$preparedCenters = $preparedCenters;
     }
 
     public function getJustEmailsCity():array

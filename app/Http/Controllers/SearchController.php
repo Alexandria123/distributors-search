@@ -18,14 +18,14 @@ class SearchController extends Controller
         $this->allDistributors = new AllDistributors();
     }
 
-    public function searchByCity(SearchRequest $request)
+    public function searchByCity(SearchRequest $request): array
     {
         $searchValue= $request->query('search');
         $search = new Search($this->getAllDistributors($request));
         return $search->getBestMatchingCity($searchValue);
     }
 
-    public function getAllDistributors(SearchRequest $request)
+    private function getAllDistributors(SearchRequest $request): array
     {
         $systemType = $request->route('systemType');
         //получаем xml файл, передаем в метод
