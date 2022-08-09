@@ -44,8 +44,10 @@ class AllDistributors
 
         //обохдим и добавляем только нужные аттрибуты 'city', 'regname', 'domain', 'email'
         foreach ($preparedCenters as $value) {
+            $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
+            $replacement = ['', '', '','/е/'];
             $regionsCitiesEmailsDomains[] = [
-                'city'=>$value['city'] ?? '',
+                'city'=> preg_replace($pattern, $replacement, $value['city']) ?? '',
                 'regname' => $value['regname'] ?? '',
                 'domain' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'domain') : [],
                 'email' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'email') : []

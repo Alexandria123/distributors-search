@@ -12,9 +12,8 @@ class Search
 
     public function getBestMatchingCity($searchValue): array
     {
-        $array = $this->array;
         $bestMatchCity = [];
-        foreach ($array as $elements) {
+        foreach ($this->array as $elements) {
             $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
             $replacement = ['', '', '','/е/'];
             //Убираем пробелы, город меняем на г.
