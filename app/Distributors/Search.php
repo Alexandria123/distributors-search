@@ -14,16 +14,24 @@ class Search
     {
         $bestMatchCity = [];
         foreach ($this->array as $elements) {
-            $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
-            $replacement = ['', '', '','/е/'];
-            //Убираем пробелы, город меняем на г.
-            $searchValue = mb_strtolower(preg_replace($pattern, $replacement, $searchValue));
+            //получаем подготовленное значение города
+            $elements['city'] = $this->valueReplace($elements['city']);
+            //Убираем пробелы,  меняем город, г.,ё у клиентской строки
+            $searchValue = $this->valueReplace($searchValue);
+            //Получаем расстояние
             $lev = levenshtein($searchValue, $elements['city']);
             // если расстояние лев. меньше допустимого, добавляем значение
-            if ($lev <= 7) {
+            if ($lev <= 4) {
                     $bestMatchCity[] = $elements;
             }
         }
         return $bestMatchCity;
+    }
+
+    private function valueReplace($value): array|string|null
+    {
+        $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
+        $replacement = ['', '', '','/е/'];
+        return mb_strtolower(preg_replace($pattern, $replacement, $value));
     }
 }
