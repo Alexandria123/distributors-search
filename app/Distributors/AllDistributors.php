@@ -4,9 +4,10 @@ namespace App\Distributors;
 
 class AllDistributors
 {
-     private const CONTACT_PATTERNS = ['email' =>'/^[^@]*@[^@]*\.[^@]*$/',
-        'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
-    ];
+     private const CONTACT_PATTERNS = [
+         'email' =>'/^[^@]*@[^@]*\.[^@]*$/',
+         'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
+     ];
 
     public function getAllDistributorsPrepared($xml): array
     {
