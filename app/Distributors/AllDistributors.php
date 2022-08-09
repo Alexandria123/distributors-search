@@ -47,7 +47,7 @@ class AllDistributors
             $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
             $replacement = ['', '', '','/е/'];
             $regionsCitiesEmailsDomains[] = [
-                'city'=> preg_replace($pattern, $replacement, $value['city']) ?? '',
+                'city'=> isset($value['city']) ? preg_replace($pattern, $replacement, $value['city']): '',
                 'regname' => $value['regname'] ?? '',
                 'domain' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'domain') : [],
                 'email' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'email') : []
