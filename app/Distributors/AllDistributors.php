@@ -42,7 +42,7 @@ class AllDistributors
     {
         $regionsCitiesEmailsDomains = [];
 
-        //обохдим и добавляем только нужные аттрибуты 'city', 'regname', 'email'
+        //обохдим и добавляем только нужные аттрибуты 'city', 'regname', 'domain', 'email'
         foreach ($preparedCenters as $value) {
             $regionsCitiesEmailsDomains[] = [
                 'city'=>$value['city'] ?? '',
