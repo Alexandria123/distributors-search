@@ -4,7 +4,11 @@ namespace App\Distributors;
 
 class AllDistributors
 {
-    public function getAllDistributorsPrepared($xml): ResultArray
+     private const CONTACT_PATTERNS = ['email' =>'/^[^@]*@[^@]*\.[^@]*$/',
+        'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
+    ];
+
+    public function getAllDistributorsPrepared($xml): array
     {
         $preparedCenters = [];
         $regname = [];
@@ -20,7 +24,7 @@ class AllDistributors
                 $preparedCenters[] = $this->getCentersAttributesArray($center, $regname);
             }
         }
-        return new ResultArray($preparedCenters);
+        return $this->getJustEmailsCity($preparedCenters);
     }
 
     private function getCentersAttributesArray($center, $regname):array
@@ -32,4 +36,40 @@ class AllDistributors
         }
         return array_merge($centers, $regname);
     }
+
+    private function getJustEmailsCity($preparedCenters):array
+    {
+        $regionsCitiesEmailsDomains = [];
+
+        //обохдим и добавляем только нужные аттрибуты 'city', 'regname', 'email'
+        foreach ($preparedCenters as $value) {
+            $regionsCitiesEmailsDomains[] = [
+                'city'=>$value['city'] ?? '',
+                'regname' => $value['regname'] ?? '',
+                'domain' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'domain') : [],
+                'email' => isset($value['email']) ? $this->getDomainsEmails($value['email'], 'email') : []
+            ];
+        }
+        return $regionsCitiesEmailsDomains;
+    }
+
+    private function getDomainsEmails($contact, $contactType): array
+    {
+        $contacts = [];
+        $arrayOfEmailsDomains = explode(", ", $contact);
+        //обходим полученный массив из имейла и домена
+        foreach ($arrayOfEmailsDomains as $element) {
+            //проверяем является ли элемент мейлом или сайтом, тогда добавляем в соответствующий массив
+            if($this->isEmailDomain($element, $contactType)){
+                $contacts[] = $element;
+            }
+        }
+        return $contacts ?? [];
+    }
+
+    private function isEmailDomain($element,$contactType): bool
+    {
+        return preg_match(self::CONTACT_PATTERNS[$contactType], $element);
+    }
+
 }

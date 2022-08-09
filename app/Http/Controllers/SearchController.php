@@ -18,7 +18,7 @@ class SearchController extends Controller
         $this->allDistributors = new AllDistributors();
     }
 
-    public function searchByCity(SearchRequest $request)
+    public function searchByCity(SearchRequest $request): array
     {
         $searchValue= $request->query('search');
         $search = new Search($this->getAllDistributors($request));
@@ -31,6 +31,6 @@ class SearchController extends Controller
         //получаем xml файл, передаем в метод
         $xml =  $this->xmlFileRepository->getXmlFileBySystemType($systemType);
         //возвращаем массив с подготовленными центрами и регионами
-        return $this->allDistributors->getAllDistributorsPrepared($xml)->getJustEmailsCity();
+        return $this->allDistributors->getAllDistributorsPrepared($xml);
     }
 }

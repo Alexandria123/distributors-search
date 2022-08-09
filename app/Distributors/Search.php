@@ -14,15 +14,15 @@ class Search
     {
         $array = $this->array;
         $bestMatchCity = [];
-        foreach ($array as $elements){
-            $pattern = ['/\s+/', '/город/', '/Город/'];
-            $replacement = ['', 'г. ', 'г. '];
+        foreach ($array as $elements) {
+            $pattern = ['/\s+/', '/город/', '/г./', '/ё/'];
+            $replacement = ['', '', '','/е/'];
             //Убираем пробелы, город меняем на г.
             $searchValue = mb_strtolower(preg_replace($pattern, $replacement, $searchValue));
             $lev = levenshtein($searchValue, $elements['city']);
             // если расстояние лев. меньше допустимого, добавляем значение
             if ($lev <= 7) {
-                $bestMatchCity[] = $elements;
+                    $bestMatchCity[] = $elements;
             }
         }
         return $bestMatchCity;
