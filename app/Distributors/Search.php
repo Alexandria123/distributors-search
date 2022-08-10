@@ -14,12 +14,10 @@ class Search
     {
         $bestMatchCity = [];
         foreach ($this->array as $elements) {
-            //получаем подготовленное значение города
-            $elements['city'] = $this->valueReplace($elements['city']);
             //Убираем пробелы,  меняем город, г.,ё у клиентской строки
             $searchValue = $this->valueReplace($searchValue);
             //Получаем расстояние
-            $lev = levenshtein($searchValue, $elements['city']);
+            $lev = levenshtein($searchValue, $this->valueReplace($elements['city']));
             // если расстояние лев. меньше допустимого, добавляем значение
             if ($lev <= 4) {
                     $bestMatchCity[] = $elements;
