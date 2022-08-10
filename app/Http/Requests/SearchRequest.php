@@ -19,7 +19,7 @@ class SearchRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->mergeIfMissing(['searchValue' => $this->query('search')]);
+      //  $this->mergeIfMissing(['searchValue' => $this->query('search')]);
     }
 
     /**
@@ -30,7 +30,7 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'searchValue' => ['required', 'string', 'min:3', 'max:30']
+          //  'searchValue' => ['required', 'string', 'min:3', 'max:30']
         ];
     }
 }

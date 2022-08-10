@@ -25,7 +25,7 @@ class SearchController extends Controller
         return $search->getBestMatchingCity($searchValue);
     }
 
-    private function getAllDistributors(SearchRequest $request): array
+    public function getAllDistributors(SearchRequest $request): array
     {
         $systemType = $request->route('systemType');
         //получаем xml файл, передаем в метод
