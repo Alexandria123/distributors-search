@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Distributors\AllDistributors;
+use App\Distributors\Distributors;
 use App\Distributors\Search;
 use App\Http\Requests\SearchRequest;
+use App\Jobs\XmlHandlingJob;
 use App\Repository\XmlFileRepository;
 
 class SearchController extends Controller
@@ -22,15 +24,21 @@ class SearchController extends Controller
     {
         $searchValue= $request->query('search');
         $search = new Search($this->getAllDistributors($request));
+
         return $search->getBestMatchingCity($searchValue);
     }
 
-    public function getAllDistributors(SearchRequest $request): array
+    private function getAllDistributors(SearchRequest $request): array
     {
         $systemType = $request->route('systemType');
         //получаем xml файл, передаем в метод
         $xml =  $this->xmlFileRepository->getXmlFileBySystemType($systemType);
         //возвращаем массив с подготовленными центрами и регионами
         return $this->allDistributors->getAllDistributorsPrepared($xml);
+    }
+
+    public function xmlHandle(SearchRequest $request){
+        $systemType = $request->route('systemType');
+        $this->dispatch(new XmlHandlingJob($systemType));
     }
 }

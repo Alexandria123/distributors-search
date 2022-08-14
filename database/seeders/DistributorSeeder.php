@@ -3,16 +3,18 @@
 namespace Database\Seeders;
 
 use App\Models\Distributor;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class DistributorSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
+       // Distributor::factory()->create();
     }
 }
