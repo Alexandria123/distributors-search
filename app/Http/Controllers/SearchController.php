@@ -37,8 +37,9 @@ class SearchController extends Controller
         return $this->allDistributors->getAllDistributorsPrepared($xml);
     }
 
-    public function xmlHandle(SearchRequest $request){
-        $systemType = $request->route('systemType');
-        $this->dispatch(new XmlHandlingJob($systemType));
-    }
+//    public function xmlHandle(SearchRequest $request){
+//        $systemType = $request->route('systemType');
+//        $xml =  $this->xmlFileRepository->getXmlFileBySystemType($systemType);
+//        $this->dispatch(new XmlHandlingJob($xml));
+//    }
 }

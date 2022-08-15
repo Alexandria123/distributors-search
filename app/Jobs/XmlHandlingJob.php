@@ -17,7 +17,7 @@ class XmlHandlingJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private Distributors $distributorsInsert;
-    private XmlFileRepository $systemType;
+    private string $systemType;
     /**
      * Create a new job instance.
      *
@@ -36,6 +36,6 @@ class XmlHandlingJob implements ShouldQueue
      */
     public function handle()
     {
-       $this->distributorsInsert->getCenterAttributes($this->systemType);
+       $this->distributorsInsert->insertToDBXmlData($this->systemType);
     }
 }

@@ -21,7 +21,7 @@ class Distributors
         $this->xmlFile = new XmlFileRepository();
     }
 
-    public function getCenterAttributes($systemType): void
+    public function insertToDBXmlData($systemType): void
     {
         foreach ($this->xmlFile->getXmlFileBySystemType($systemType)->region as $region) {
             $regions = new Region();
