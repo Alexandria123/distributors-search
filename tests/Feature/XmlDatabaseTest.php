@@ -35,6 +35,14 @@ class XmlDatabaseTest extends TestCase
                 'address' => $distributor['address'],
                 'phone' => $distributor['phone']
             ]);
+            if($distributor['city']!="") {
+                $this->assertDatabaseHas('cities', [
+                    'name' => $distributor['city']
+                ]);
+            }
+            $this->assertDatabaseHas('regions', [
+                'name' => $distributor['regname']
+            ]);
         }
     }
 //    public function test_db()
