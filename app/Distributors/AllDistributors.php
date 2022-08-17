@@ -46,7 +46,11 @@ class AllDistributors
                 'city'=>(string)$center->attributes()['city'] ?? '',
                 'regname' => $regname['regname'] ?? '',
                 'domain' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'domain') : [],
-                'email' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'email') : []
+                'email' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'email') : [],
+                'name' => (string)$center->attributes()['name'],
+                'address' => (string)$center->attributes()['address'],
+                'phone' => (string)$center->attributes()['phone'],
+
             ];
     }
 

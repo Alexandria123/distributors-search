@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Distributors\Distributors;
+use App\Models\City;
 use App\Models\Distributor;
+use App\Models\Region;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -20,15 +22,15 @@ class DistributorFactory extends Factory
     public function definition()
     {
         return [
-            'id'=> '',
-            'region_id'=>'',
-            'name'=>'',
-            'email'=>'',
-            'domain'=>'',
-            'address'=>'',
-            'phone'=>'',
-            'status'=>'',
-            'city_id'=>'',
+            'id'=> $this->faker->unique()->randomNumber(2, false),
+          //  'region_id'=>Region::factory(),
+            'name'=>$this->faker->company(),
+            'email'=> json_encode($this->faker->email()),
+            'domain'=> json_encode($this->faker->domainName()),
+            'address'=> $this->faker->address(),
+            'phone'=> $this->faker->PhoneNumber(),
+            'status'=> 'Дистрибьютор',
+           // 'city_id'=> City::factory(),
         ];
     }
 }
