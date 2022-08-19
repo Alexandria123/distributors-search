@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Distributors\Distributors;
+use App\Distributors\XmlInsert;
 use App\Models\Distributor;
 use App\Repository\XmlFileRepository;
 use Illuminate\Bus\Queueable;
@@ -16,7 +16,7 @@ class XmlHandlingJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Distributors $distributorsInsert;
+    private XmlInsert $distributorsInsert;
     private string $systemType;
     /**
      * Create a new job instance.
@@ -25,7 +25,7 @@ class XmlHandlingJob implements ShouldQueue
      */
     public function __construct($systemType)
     {
-        $this->distributorsInsert = new Distributors();
+        $this->distributorsInsert = new XmlInsert();
         $this->systemType = $systemType;
     }
 

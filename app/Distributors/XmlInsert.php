@@ -8,7 +8,7 @@ use App\Models\Region;
 use App\Repository\XmlFileRepository;
 use Illuminate\Support\Facades\DB;
 
-class Distributors
+class XmlInsert
 {
     private const CONTACT_PATTERNS = [
         'email' =>'/^[^@]*@[^@]*\.[^@]*$/',
@@ -26,16 +26,17 @@ class Distributors
         foreach ($this->xmlFile->getXmlFileBySystemType($systemType)->region as $region) {
             $regions = new Region();
             $regions->name = $region->attributes()['regname'];
+            $regions->centers = (int)$region->attributes()['centers'];
             $regions->save();
             foreach ($region->center as $center) {
                 //Добавление городов
                 $city = new City();
                 //Проверяем отсутсвует ли город в базе
-                $commonValue = DB::table('cities')->where('name', $center->attributes()['city'])->doesntExist();
+                $cityDoesntExist = DB::table('cities')->where('name', $center->attributes()['city'])->doesntExist();
                 //Получаем регион
                 $region_id = DB::table('regions')->where('name', $region->attributes()['regname'])->first();
                 //Добавляем город, если такого города нет в бд, добавляем id_region в таблицу городов
-                if(isset($center->attributes()['city']) && $commonValue)
+                if(isset($center->attributes()['city']) && $cityDoesntExist)
                 {
                     $city->region_id = $region_id->id;
                     $city->name = (string)$center->attributes()['city'];

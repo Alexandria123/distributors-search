@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Distributors\AllDistributors;
-use App\Distributors\Distributors;
+use App\Distributors\XmlInsert;
 use App\Distributors\Search;
 use App\Http\Requests\SearchRequest;
 use App\Jobs\XmlHandlingJob;

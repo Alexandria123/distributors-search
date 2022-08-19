@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Distributors\Distributors;
+use App\Distributors\XmlInsert;
 use App\Models\City;
 use App\Models\Distributor;
 use App\Models\Region;
