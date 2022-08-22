@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Requests\SearchRequest;
 use App\Jobs\XmlHandlingJob;
 use Illuminate\Console\Command;
 
@@ -13,7 +12,7 @@ class JobCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'job:start {systemType}';
+    protected $signature = 'job:insert {systemType}';
 
     /**
      * The console command description.

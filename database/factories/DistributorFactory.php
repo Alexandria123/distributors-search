@@ -23,14 +23,12 @@ class DistributorFactory extends Factory
     {
         return [
             'id'=> $this->faker->unique()->randomNumber(2, false),
-          //  'region_id'=>Region::factory(),
             'name'=>$this->faker->company(),
             'email'=> json_encode($this->faker->email()),
             'domain'=> json_encode($this->faker->domainName()),
             'address'=> $this->faker->address(),
             'phone'=> $this->faker->PhoneNumber(),
-            'status'=> 'Дистрибьютор',
-           // 'city_id'=> City::factory(),
+            'status'=> 'Дистрибьютор'
         ];
     }
 }

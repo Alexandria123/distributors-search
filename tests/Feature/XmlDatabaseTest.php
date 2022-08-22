@@ -3,10 +3,8 @@
 namespace Tests\Feature;
 
 use App\Distributors\AllDistributors;
-use App\Models\Region;
 use App\Repository\XmlFileRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class XmlDatabaseTest extends TestCase
@@ -20,7 +18,7 @@ class XmlDatabaseTest extends TestCase
     //Проверяет job задачу, что таблицы бд заполнены данными из файла xml
     public function test_job_console(){
         //Что команда выполняется успешно
-        $this->artisan('job:start kodeks')->assertExitCode(0);
+        $this->artisan('job:insert kodeks')->assertExitCode(0);
         $xmlRepository = new XmlFileRepository();
         $distributors = new AllDistributors();
         $arrayDistributors= $distributors->getAllDistributorsPrepared($xmlRepository->getXmlFileBySystemType('kodeks'));
@@ -35,11 +33,13 @@ class XmlDatabaseTest extends TestCase
                 'address' => $distributor['address'],
                 'phone' => $distributor['phone']
             ]);
+            //Проверяем заполненность городов данными xml, пропускаем пустые значения города xml
             if($distributor['city']!="") {
                 $this->assertDatabaseHas('cities', [
                     'name' => $distributor['city']
                 ]);
             }
+            //Проверяем заполненность регионов
             $this->assertDatabaseHas('regions', [
                 'name' => $distributor['regname']
             ]);
