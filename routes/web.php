@@ -7,6 +7,6 @@ Route::get('/',  [RegionsController::class, 'regionsWithCities']);
 
 Route::prefix('statistic')->controller(RegionsController::class)->group(function(){
     Route::get('/most', 'regionsWhereMostDistributors');
-    Route::get('/min', 'regionsWhereLeastDistributors');
+    Route::get('/minimum', 'regionsWhereLeastDistributors');
     Route::get('/none', 'regionsWhereNoDistributors');
 });

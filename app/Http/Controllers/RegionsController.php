@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Distributors\Statistics;
-use Illuminate\Support\Collection;
 
 class RegionsController extends Controller
 {
@@ -27,7 +26,7 @@ class RegionsController extends Controller
         return $this->statistics->getregionsWhereLeastDistributors();
     }
 
-    public function regionsWhereNoDistributors(): Collection
+    public function regionsWhereNoDistributors(): array
     {
         return $this->statistics->regionsWhereNoDistributors();
     }

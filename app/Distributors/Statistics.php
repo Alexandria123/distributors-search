@@ -3,11 +3,25 @@
 namespace App\Distributors;
 
 use App\Models\Distributor;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Statistics
 {
+    private array $distributorsCountRegions;
+
+    public function __construct(){
+        //Получаем id регионов без повторений
+        $regions = DB::table('distributors')->select('region_id')->distinct()->pluck('region_id');
+        //Обходим id регионов ($regions) и делаем запрос к таблице дистрибьютора
+        // там где id совпадает подсчитываем, получаем количество совпавших id региона.
+        //$regionName - получаем дистрибьютора с регионом (через связь).
+        //вторым элементом массива добавляем название региона из $regionName
+        foreach ($regions as $regionId){
+            $regionName = Distributor::with('region')->where('region_id', $regionId)->first();
+            $this->distributorsCountRegions[] =  ['count' => DB::table('distributors')->where('region_id', $regionId)->count(),
+                'region'=>$regionName->region->name];
+        }
+    }
     public function regionsWithCities(): array
     {
         $regionCity = [];
@@ -21,18 +35,28 @@ class Statistics
 
     public function getregionsWhereMostDistributors(): array
     {
-        $mostDistributors =  DB::table('regions')->orderByDesc('centers')->get();
-        return [$mostDistributors[0], $mostDistributors[1], $mostDistributors[2]];
+        rsort($this->distributorsCountRegions); //Сортируем по убыванию
+        return  [$this->distributorsCountRegions[0]['region'], $this->distributorsCountRegions[1]['region'], $this->distributorsCountRegions[2]['region']];
     }
 
     public function getregionsWhereLeastDistributors(): array
     {
-        $minDistributors = DB::table('regions')->orderBy('centers')->where('centers', '>', 0)->get();
-        return [$minDistributors[0], $minDistributors[1], $minDistributors[2]];
+        sort($this->distributorsCountRegions);
+        return [$this->distributorsCountRegions[0]['region'], $this->distributorsCountRegions[1]['region'], $this->distributorsCountRegions[2]['region']];
     }
 
-    public function regionsWhereNoDistributors(): Collection
+    public function regionsWhereNoDistributors(): array
     {
-        return DB::table('regions')->where('centers', '=', 0)->get();
+        $regionsWithoutCenters = [];
+        //Получаем id и название из таблицы регионов
+        $regions = DB::table('regions')->pluck('name', 'id');
+        //Обходим все id регионов
+        foreach ($regions as $id=>$name){
+            //Проверяем есть ли id региона в таблице Дитсрибьютора, если нет, то у региона нету центра, получаем этот id из таблицы, добаавляем в массив
+            if(DB::table('distributors')->where('region_id', $id)->doesntExist()){
+                $regionsWithoutCenters[] = DB::table('regions')->where('id', $id)->first('name');
+            }
+        }
+        return $regionsWithoutCenters;
     }
 }
