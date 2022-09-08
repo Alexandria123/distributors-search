@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Jobs\XmlHandlingJob;
 use Illuminate\Console\Command;
 
-class JobCommandInsertToDB extends Command
+class JobCommandDistributorsUpdateDB extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'startJob:insertToDB {systemType}';
+    protected $signature = 'distrs:update-db {systemType}';
 
     /**
      * The console command description.

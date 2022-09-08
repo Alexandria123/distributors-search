@@ -3,13 +3,8 @@
 namespace Tests\Feature;
 
 use App\Distributors\AllDistributors;
-use App\Repository\XmlFileRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Mockery\MockInterface;
-use PHPUnit\Util\Test;
 use Tests\TestCase;
 
 class XmlDatabaseTest extends TestCase
@@ -28,20 +23,6 @@ class XmlDatabaseTest extends TestCase
         $this->xmlFile = simplexml_load_string(Storage::disk('local')->get('xmlFIleData.xml'));
 
     }
-
-    //Проверяет job задачу, что таблицы бд заполнены данными из файла xml
-//    public function test_job_console(): void
-//    {
-//        //Что команда выполняется успешно
-//        $this->artisan('startJob:insertToDB kodeks')->assertExitCode(0);
-//        $xmlRepository = new XmlFileRepository();
-//        $distributors = new AllDistributors();
-//        $arrayDistributors = $distributors->getAllDistributorsPrepared($xmlRepository->getXmlFileBySystemType('kodeks'));
-//        //Storage::fake('xmlFile');
-//        //Обход подготовленного массива xml
-//        //Проверяет есть ли в бд данные из xml файла
-//
-//    }
 
     public function test_distributors(): void
     {

@@ -6,7 +6,6 @@ use App\Models\City;
 use App\Models\Distributor;
 use App\Models\Region;
 use App\Repository\XmlFileRepository;
-use Illuminate\Support\Facades\DB;
 
 class XmlInsert
 {

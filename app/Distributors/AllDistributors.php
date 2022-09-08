@@ -28,17 +28,6 @@ class AllDistributors
         return $preparedCenters;
     }
 
-//    private function getCentersAttributesArray($center, $regname):array
-//    {
-//        $centers = [];
-//        //обходим аттрибуты цетнра, добавляем в массив и объединяем с регионами
-//        foreach ($center->attributes() as $keyC => $center) {
-//            $centers[$keyC] = (string)$center;
-//        }
-//        return array_merge($centers, $regname);
-//    }
-//
-
     private function getJustEmailsCity($center, $regname):array
     {
         //добавляем только нужные аттрибуты 'city', 'regname', 'domain', 'email'
