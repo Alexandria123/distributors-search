@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Distributor extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'name', 'address', 'email', 'domain', 'status', 'phone'];
+    protected $fillable = ['id', 'region_id', 'city_id', 'name', 'address', 'emails', 'domains', 'phone', 'status'];
     public $timestamps = false;
 
     public function region(){

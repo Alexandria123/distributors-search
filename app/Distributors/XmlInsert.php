@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 class XmlInsert
 {
     private const CONTACT_PATTERNS = [
-        'email' =>'/^[^@]*@[^@]*\.[^@]*$/',
-        'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
+        'emails' =>'/^[^@]*@[^@]*\.[^@]*$/',
+        'domains'=>  '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
     ];
     private XmlFileRepository $xmlFile;
 
@@ -23,49 +23,39 @@ class XmlInsert
 
     public function insertToDBXmlData($systemType): void
     {
-        foreach ($this->xmlFile->getXmlFileBySystemType($systemType)->region as $region) {
+        foreach ($this->xmlFile->getXmlFileBySystemType($systemType)->region as $xmlRegion) {
             //Добавление регионов
-            $regions = new Region();
-            $regions->name = $region->attributes()['regname'];
-            //$regions->centers = (int)$region->attributes()['centers'];
-            $regions->save();
-            foreach ($region->center as $center) {
+            $region = Region::create(['name' => $xmlRegion->attributes()['regname']]);
+
+            $addedCities = [];
+            foreach ($xmlRegion->center as $center) {
                 //Добавление городов
-                $city = new City();
                 //проверяем отсутсвует ли город в базе
-                $cityDoesntExist = DB::table('cities')->where('name', $center->attributes()['city'])->doesntExist();
-                //получаем регион
-                $region_id = DB::table('regions')->where('name', $region->attributes()['regname'])->first();
-                //Добавляем город, если такого города нет в бд, добавляем id_region в таблицу городов
-                if(isset($center->attributes()['city']) && $cityDoesntExist)
+                //Добавляем город, если такого города нет в бд. Добавляем id_region в таблицу городов
+                if(isset($center->attributes()['city']) && !in_array($center->attributes()['city'], $addedCities))
                 {
-                    $city->region_id = $region_id->id;
-                    $city->name = (string)$center->attributes()['city'];
-                    $city->save();
+                    $city = City::create([
+                        'name'=> (string)$center->attributes()['city'],
+                        'region_id' => $region->id
+                    ]);
+                    $addedCities[] = (string)$center->attributes()['city'];
                 }
                 //Добавление дистрибьюторов
-                $distributor = new Distributor();
-                $distributor->id = (int)$center->attributes()['id'];
-                //Получаем id по названию региона, добавляем
-                $distributor->region_id = $region_id->id;
-                //получаем нужный город из таблицы городов
-                //получаем id по значению города, добавляем в таблицу дистрибьюторов
-                if(isset($center->attributes()['city'])) {
-                    $city_id = DB::table('cities')->where('name', $center->attributes()['city'])->first();
-                    $distributor->city_id = $city_id->id;
-                }
-                $distributor->name = (string)$center->attributes()['name'];
-                $distributor->email = json_encode(isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'email') : []);
-                $distributor->domain = json_encode(isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'domain') : []);
-                $distributor->address = (string)$center->attributes()['address'];
-                $distributor->phone = (string)$center->attributes()['phone'];
-                $distributor->status = (string)$center->attributes()['status'];
-                $distributor->save();
+                $distributor = Distributor::create(['id' => (int)$center->attributes()['id'],
+                    'region_id' => $region->id,
+                    'city_id' => $city->id ?? NULL,
+                    'name' => (string)$center->attributes()['name'],
+                    'emails' => json_encode(isset($center->attributes()['email']) ? $this->getContacts($center->attributes()['email'], 'emails') : []),
+                    'domains' => json_encode(isset($center->attributes()['email']) ? $this->getContacts($center->attributes()['email'], 'domains') : []),
+                    'address' => (string)$center->attributes()['address'],
+                    'phone' => (string)$center->attributes()['phone'],
+                    'status' => (string)$center->attributes()['status']
+                ]);
             }
         }
     }
 
-    private function getDomainsEmails($contact, $contactType): array
+    private function getContacts($contact, $contactType): array
     {
         $contacts = [];
         $arrayOfEmailsDomains = explode(", ", $contact);

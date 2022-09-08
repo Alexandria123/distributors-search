@@ -18,12 +18,11 @@ return new class extends Migration
             $table->foreignId('region_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('city_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name')->nullable();
-            $table->json('email')->nullable();
-            $table->json('domain')->nullable();
+            $table->json('emails')->nullable();
+            $table->json('domains')->nullable();
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('status')->nullable();
-
         });
     }
 

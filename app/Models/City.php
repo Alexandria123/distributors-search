@@ -9,7 +9,7 @@ class City extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable=['name'];
+    protected $fillable=['name', 'region_id'];
 
     public function distributors(){
         return $this->hasMany(Distributor::class);

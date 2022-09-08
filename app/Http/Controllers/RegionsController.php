@@ -13,20 +13,20 @@ class RegionsController extends Controller
     }
     public function regionsWithCities(): array
     {
-        return $this->statistics->regionsWithCities();
+        return $this->statistics->allRegionsWithCities();
     }
 
     public function regionsWhereMostDistributors(): array
     {
-       return $this->statistics->getregionsWhereMostDistributors();
+       return $this->statistics->getRegionsWhereMostDistributors();
     }
 
     public function regionsWhereLeastDistributors(): array
     {
-        return $this->statistics->getregionsWhereLeastDistributors();
+        return $this->statistics->getRegionsWhereLeastDistributors();
     }
 
-    public function regionsWhereNoDistributors(): array
+    public function regionsWhereNoDistributors()
     {
         return $this->statistics->regionsWhereNoDistributors();
     }

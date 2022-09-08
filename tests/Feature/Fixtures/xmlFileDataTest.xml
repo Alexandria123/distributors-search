@@ -1,0 +1,16 @@
+<?xml version="1.0" ?><?xml-stylesheet type="text/xsl" href="journal.xsl"?>
+<regions><region id="" regname="Азербайджанская Республика (Азербайджан)" county="Вне России" centers="0"/><region id="22" regname="Алтайский край" center="г. Барнаул" county="Сибирский ФО" centers="7">
+    <center id="1734" regionid="/6/22/0/1/" city="г. Барнаул" name="ИП Зубанова Юлия Александровна"
+            email="cntd-22@yandex.ru" address="656015, г. Барнаул, пр-т Красноармейский, 108, оф. 302"
+            phone="+7 (3852) 53 24 00, +7 (913) 215 55 70" status="Дистрибьютор"/>
+    <center id="173045" regionid="/6/22/0/1/" city="г. Барнаул"
+            name="Индивидуальный предприниматель Сочугова Наталья Ивановна" email="cntd3000@yandex.ru"
+            address="656015, г. Барнаул, пр-т Красноармейский, 108, оф.302" phone="+7 (913) 214 69 13"
+            status="Дистрибьютор"/>
+</region><region id="29" regname="Архангельская обл." center="г. Архангельск" county="Северо-Западный ФО" centers="1">
+    <center id="14919" regionid="/2/29/0/1/" city="г. Архангельск"
+            name="Общество с ограниченной ответственностью &quot;Двина-Софт Информационные Системы&quot;"
+            email="dvinasoft.ru, info@dvinasoft.ru"
+            address="163000, г. Архангельск, ул. Поморская, д. 34, корп. 1, пом. 2,3"
+            phone="+7 (8182) 65 12 64, +7 (8182) 65 32 89" status="Дистрибьютор"/>
+</region></regions>

@@ -5,8 +5,8 @@ namespace App\Distributors;
 class AllDistributors
 {
      private const CONTACT_PATTERNS = [
-         'email' =>'/^[^@]*@[^@]*\.[^@]*$/',
-         'domain'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
+         'emails' =>'/^[^@]*@[^@]*\.[^@]*$/',
+         'domains'=> '%^((http?://)|(www\.))(([a-z0-9-].?)|([а-я0-9-].?))+(:[0-9]+)?(/.*)?$%i'
      ];
 
     public function getAllDistributorsPrepared($xml): array
@@ -45,11 +45,11 @@ class AllDistributors
             return [
                 'city'=>(string)$center->attributes()['city'] ?? '',
                 'regname' => $regname['regname'] ?? '',
-                'domain' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'domain') : [],
-                'email' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'email') : [],
-                'name' => (string)$center->attributes()['name'],
-                'address' => (string)$center->attributes()['address'],
-                'phone' => (string)$center->attributes()['phone'],
+                'name' => (string)$center->attributes()['name'] ?? '',
+                'domains' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'domains') : [],
+                'emails' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'emails') : [],
+                'address' => (string)$center->attributes()['address'] ?? '',
+                'phone' => (string)$center->attributes()['phone'] ?? '',
 
             ];
     }
