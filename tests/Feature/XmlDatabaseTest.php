@@ -26,7 +26,7 @@ class XmlDatabaseTest extends TestCase
 
     public function test_distributors(): void
     {
-        $this->artisan('startJob:insertToDB kodeks')->assertExitCode(0);
+        $this->artisan('distrs:update-db kodeks')->assertExitCode(0);
         Storage::disk('local')->assertExists('xmlFIleData.xml');
         $arrayDistributors = $this->distributors->getAllDistributorsPrepared($this->xmlFile);
         foreach ($arrayDistributors as $distributor){
@@ -41,7 +41,7 @@ class XmlDatabaseTest extends TestCase
     }
 
     public function test_cities(){
-        $this->artisan('startJob:insertToDB kodeks')->assertExitCode(0);
+        $this->artisan('sdistrs:update-db kodeks')->assertExitCode(0);
         $arrayDistributors = $this->distributors->getAllDistributorsPrepared($this->xmlFile);
         foreach ($arrayDistributors as $distributor){
             if($distributor['city'] != "") {
@@ -53,7 +53,7 @@ class XmlDatabaseTest extends TestCase
     }
 
     public function test_regions(){
-        $this->artisan('startJob:insertToDB kodeks')->assertExitCode(0);
+        $this->artisan('distrs:update-db kodeks')->assertExitCode(0);
         $arrayDistributors = $this->distributors->getAllDistributorsPrepared($this->xmlFile);
         foreach($arrayDistributors as $distributor){
             $this->assertDatabaseHas('regions', [
@@ -61,5 +61,4 @@ class XmlDatabaseTest extends TestCase
             ]);
         }
     }
-
 }
