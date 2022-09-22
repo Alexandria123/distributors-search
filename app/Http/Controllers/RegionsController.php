@@ -26,7 +26,7 @@ class RegionsController extends Controller
         return $this->statistics->getRegionsWhereLeastDistributors();
     }
 
-    public function regionsWhereNoDistributors()
+    public function regionsWhereNoDistributors(): array
     {
         return $this->statistics->regionsWhereNoDistributors();
     }

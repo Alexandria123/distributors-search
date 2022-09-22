@@ -30,9 +30,8 @@ class XmlHandlingJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $distributorsInsert = new XmlInsert();
-        $distributorsInsert->insertToDBXmlData($this->systemType);
+        (new XmlInsert())->insertToDBXmlData($this->systemType);
     }
 }

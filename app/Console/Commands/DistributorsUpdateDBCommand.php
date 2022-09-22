@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\XmlHandlingJob;
 use Illuminate\Console\Command;
 
-class JobCommandDistributorsUpdateDB extends Command
+class DistributorsUpdateDBCommand extends Command
 {
     /**
      * The name and signature of the console command.

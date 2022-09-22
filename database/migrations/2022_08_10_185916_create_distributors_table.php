@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('distributors', function (Blueprint $table) {
-            $table->bigInteger('id');
+            $table->id();
             $table->foreignId('region_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('city_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name')->nullable();

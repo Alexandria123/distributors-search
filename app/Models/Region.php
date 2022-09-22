@@ -17,4 +17,9 @@ class Region extends Model
     {
         return $this->hasMany(City::class);
     }
+    public function distributors(): HasMany
+    {
+        return $this->hasMany(Distributor::class);
+    }
+
 }

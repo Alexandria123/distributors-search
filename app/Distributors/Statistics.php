@@ -37,15 +37,15 @@ class Statistics
 
     public function getRegionsWhereLeastDistributors(): array
     {
-
         return array_slice($this->distributorsCountRegions, -3, 3);
     }
 
-    public function regionsWhereNoDistributors()
+    public function regionsWhereNoDistributors(): array
     {
         return Region::leftJoin('distributors', 'regions.id', 'distributors.region_id')
             ->select('regions.name')
             ->where('distributors.region_id', '=', null)
-            ->get();
+            ->get()
+            ->toArray();
     }
 }

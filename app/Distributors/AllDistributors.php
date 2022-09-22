@@ -39,6 +39,7 @@ class AllDistributors
                 'emails' => isset($center->attributes()['email']) ? $this->getDomainsEmails($center->attributes()['email'], 'emails') : [],
                 'address' => (string)$center->attributes()['address'] ?? '',
                 'phone' => (string)$center->attributes()['phone'] ?? '',
+                'status' => (string)$center->attributes()['status'] ?? '',
 
             ];
     }

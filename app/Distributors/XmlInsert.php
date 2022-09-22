@@ -26,23 +26,25 @@ class XmlInsert
             //Добавление регионов
             $region = Region::create(['name' => $xmlRegion->attributes()['regname']]);
 
-            $addedCities = [];
+            $addedCitiesID = [];
+            $city = NULL;
             foreach ($xmlRegion->center as $center) {
                 //Добавление городов
                 //проверяем отсутсвует ли город в базе
-                //Добавляем город, если такого города нет в бд. Добавляем id_region в таблицу городов
-                if(isset($center->attributes()['city']) && !in_array($center->attributes()['city'], $addedCities))
+                //Добавляем город, если такого города нет в бд. Добавляем region_id в таблицу городов
+                if(isset($center->attributes()['city']) && !array_key_exists((string)$center->attributes()['city'], $addedCitiesID))
                 {
                     $city = City::create([
-                        'name'=> (string)$center->attributes()['city'],
+                        'name' => (string)$center->attributes()['city'],
                         'region_id' => $region->id
                     ]);
-                    $addedCities[] = (string)$center->attributes()['city'];
+                    //Массив для получения по ключу(названию города) Id города для сохранения в дистрибютора(city_id)
+                    $addedCitiesID[(string)$center->attributes()['city']] = $city->id;
                 }
                 //Добавление дистрибьюторов
                 $distributor = Distributor::create(['id' => (int)$center->attributes()['id'],
                     'region_id' => $region->id,
-                    'city_id' => $city->id ?? NULL,
+                    'city_id' => $addedCitiesID[(string)$center->attributes()['city']] ?? NULL,
                     'name' => (string)$center->attributes()['name'],
                     'emails' => json_encode(isset($center->attributes()['email']) ? $this->getContacts($center->attributes()['email'], 'emails') : []),
                     'domains' => json_encode(isset($center->attributes()['email']) ? $this->getContacts($center->attributes()['email'], 'domains') : []),
